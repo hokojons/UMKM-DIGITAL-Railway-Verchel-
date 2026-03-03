@@ -538,7 +538,7 @@ export function AdminPanel({ isOpen, onClose, onDataUpdate }: AdminPanelProps) {
               setSiteSettingsForm({
                 siteName: data.data.site_name || 'Pasar UMKM',
                 logoFile: null,
-                logoPreview: data.data.site_logo ? `${BASE_HOST}/${data.data.site_logo}` : '',
+                logoPreview: data.data.site_logo ? (data.data.site_logo.startsWith('http') ? data.data.site_logo : `${BASE_HOST}/${data.data.site_logo}`) : '',
               });
             }
           })
