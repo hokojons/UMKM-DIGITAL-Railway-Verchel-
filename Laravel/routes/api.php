@@ -23,6 +23,31 @@ Route::get('/test', function () {
     return response()->json(['status' => 'API is working']);
 });
 
+// TEMPORARY: Add google_id and last_login_at to users table - REMOVE AFTER USE
+Route::get('/setup-users-columns', function () {
+    try {
+        $results = [];
+        
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'google_id')) {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ADD COLUMN google_id VARCHAR(255) NULL AFTER foto_profil");
+            $results[] = 'google_id added';
+        } else {
+            $results[] = 'google_id already exists';
+        }
+        
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'last_login_at')) {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ADD COLUMN last_login_at TIMESTAMP NULL AFTER status");
+            $results[] = 'last_login_at added';
+        } else {
+            $results[] = 'last_login_at already exists';
+        }
+        
+        return response()->json(['success' => true, 'results' => $results]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+    }
+});
+
 // TEMPORARY: Create event_products table - REMOVE AFTER USE
 Route::get('/setup-event-products', function () {
     try {
